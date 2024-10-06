@@ -2,10 +2,15 @@ static ulong tick_time = TICK_CLOCK_TIME;
 static ulong tick_colon = TICK_COLON_TIME;
 static int prevmin = 100;
 static int prevhr = 100;
+static bool show_time = true;
 bool colon = true;
 
 
 void time_tick() {
+  if (!show_time) {
+    return;
+  }
+
   bool wait = false;
 
   if (minute() != prevmin) {
@@ -56,10 +61,23 @@ void update_hrs() {
 }
 
 void colon_tick() {
-  if (millis() - tick_colon >= TICK_COLON_TIME) {
+  if (show_time && millis() - tick_colon >= TICK_COLON_TIME) {
     disp.colon(colon);
     colon = !colon;
 
     tick_colon = millis();
   }
+}
+
+void start_update_time() {
+  prevhr = 100;
+  prevmin = 100;
+  show_time = true;
+}
+
+void stop_update_time() {
+  show_time = false;
+  disp.colon(false);
+  disp.clear();
+  disp.update();
 }

@@ -17,6 +17,8 @@ void switch_enc_actions() {
     decrease_mins();
   } else if (enc.step(1)) {
     increase_hrs();
+  } else if (enc.hasClicks(3)) {
+    start_bme_cycle();
   }
 }
 
@@ -30,7 +32,7 @@ void increase_brightness() {
 }
 
 void increase_hrs() {
-  time += 3600;
+  ulong time = now() + 3600;
 
   setTime(time);
 }
@@ -45,14 +47,14 @@ void decrease_brightness() {
 }
 
 void increase_mins() {
-  time -= time % 60;
+  ulong time = now() - now() % 60;
   time += 60;
 
   setTime(time);
 }
 
 void decrease_mins() {
-  time -= time % 60;
+  ulong time = now() - now() % 60;
   time -= 60;
 
   setTime(time);
