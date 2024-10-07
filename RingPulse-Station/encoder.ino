@@ -23,10 +23,11 @@ void switch_enc_actions() {
 }
 
 void increase_brightness() {
-  if (brightness < MAX_DISPLAY_BRIGHTNESS) {
+  if (brightness <= MAX_DISPLAY_BRIGHTNESS) {
     brightness += 1;
 
-    disp.brightness(brightness);
+    disp.brightness(brightness - 1);
+    set_power(true);
     disp.update();
   }
 }
@@ -41,7 +42,11 @@ void decrease_brightness() {
   if (brightness > 0) {
     brightness -= 1;
 
-    disp.brightness(brightness);
+    if (brightness == 0) {
+      set_power(false);
+    } else {
+      disp.brightness(brightness - 1);
+    }
     disp.update();
   }
 }

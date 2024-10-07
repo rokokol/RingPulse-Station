@@ -1,10 +1,10 @@
-static ulong tick = RUN_PERIOD;
-char data[15] = "";
+static ulong bme_tick_millis = RUN_PERIOD;
+char data[16] = "";
 
 void bme_tick() {
   if (run.running()) {
     run.tick();
-    if (millis() - tick >= (strlen(data) + 5) * RUN_PERIOD) {
+    if (millis() - bme_tick_millis >= (strlen(data) + 5) * RUN_PERIOD) {
       for (int i = 0; i < strlen(data); i++) {
         data[i] = "";
       }
@@ -25,13 +25,13 @@ void start_bme_cycle() {
   strcat(data, "*C ");
 
   ltoa(pressuse, data + strlen(data), DEC);
-  strcat(data, "Hg ");
+  strcat(data, "Xg ");
 
   itoa(humidity, data + strlen(data), DEC);
-  strcat(data, "%");
+  strcat(data, "Pr");
 
   Serial.println(data);
   run.setText(data);
   run.start();
-  tick = millis();
+  bme_tick_millis = millis();
 }

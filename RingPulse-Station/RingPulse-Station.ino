@@ -9,12 +9,15 @@
 #define TICK_COLON_TIME 1000
 #define MAX_DISPLAY_BRIGHTNESS 7
 #define RUN_PERIOD 500
+#define VOLUME_BARRIER 520
+#define BRIGHTNESS_ON_TIME 3000
 
 #define DIO_PIN 3
 #define CLK_PIN 4
 #define S1_PIN 7
 #define S2_PIN 6
 #define KEY_PIN 5
+#define MICRO_PIN A7
 
 Disp1637Colon disp(3, 4, true);
 SegRunner run(&disp);
@@ -23,6 +26,7 @@ EncButton enc(S1_PIN, S2_PIN, KEY_PIN);
 GyverBME280 bme;
 
 int brightness = 5;
+bool power = true;
 
 void setup() {
   Serial.begin(9600);
@@ -43,10 +47,16 @@ void loop() {
   colon_tick();
   bme_tick();
   time_tick();
+  micro_tick();
   enc_tick();
 
   t1 = millis() - t1;
   if (t1 > 150) {
     Serial.println(t1);
   }
+}
+
+void set_power(bool state) {
+  disp.power(state);
+  power = state;
 }
