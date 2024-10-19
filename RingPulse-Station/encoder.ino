@@ -19,6 +19,8 @@ void switch_enc_actions() {
     increase_hrs();
   } else if (enc.hasClicks(3)) {
     start_bme_cycle();
+  } else if (enc.hasClicks(2)) {
+    next_led_mode();
   }
 }
 
@@ -26,9 +28,8 @@ void increase_brightness() {
   if (brightness <= MAX_DISPLAY_BRIGHTNESS) {
     brightness += 1;
 
-    disp.brightness(brightness - 1);
+    update_brightness();
     set_power(true);
-    disp.update();
   }
 }
 
@@ -39,15 +40,12 @@ void increase_hrs() {
 }
 
 void decrease_brightness() {
-  if (brightness > 0) {
-    brightness -= 1;
-
-    if (brightness == 0) {
-      set_power(false);
-    } else {
-      disp.brightness(brightness - 1);
-    }
+  if (brightness == 0) {
+    set_power(false);
     disp.update();
+  } else if (brightness > 0) {
+    brightness -= 1;
+    update_brightness();
   }
 }
 
@@ -63,4 +61,16 @@ void decrease_mins() {
   time -= 60;
 
   setTime(time);
+}
+
+void update_brightness() {
+  int level = constrain(brightness - 1, 0, 7);
+  FastLED.setBrightness(map(level, 0, 7, 0, 255));
+  FastLED.show();
+  disp.brightness(level);
+  disp.update();
+}
+
+void next_led_mode() {
+  led_mode = (led_mode + 1) % MODS_COUNT;
 }

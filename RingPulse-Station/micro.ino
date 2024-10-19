@@ -1,6 +1,9 @@
 static ulong off_tick = 0;
 
 void micro_tick() {
+  int diff = constrain(volume - analogRead(MICRO_PIN), -VOLUME_LINE, VOLUME_LINE);
+  volume -= VOLUME_SPEED_COEF * diff;
+
   if (!power) {
     int vol = analogRead(MICRO_PIN);
     if (vol > VOLUME_BARRIER) {
