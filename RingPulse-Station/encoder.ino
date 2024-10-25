@@ -20,6 +20,7 @@ void switch_enc_actions() {
   } else if (enc.hasClicks(3)) {
     start_bme_cycle();
   } else if (enc.hasClicks(2)) {
+    FastLED.clear();
     next_led_mode();
   }
 }
@@ -73,4 +74,7 @@ void update_brightness() {
 
 void next_led_mode() {
   led_mode = (led_mode + 1) % MODS_COUNT;
+  if (led_mode == OFF_RING) {
+    FastLED.show();
+  }
 }
